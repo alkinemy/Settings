@@ -52,13 +52,14 @@ ZSH_THEME="agnoster_custom"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(git zsh-syntax-highlighting)
 
 # User configuration
 
-export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+export PATH="$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 # export MANPATH="/usr/local/man:$MANPATH"
 
+export fpath=(/usr/local/Cellar/zsh/$ZSH_VERSION/share/zsh/functions/ $fpath)
 source $ZSH/oh-my-zsh.sh
 
 # You may need to manually set your language environment
@@ -101,14 +102,91 @@ alias stp='$HOME/Documents/settings/scripts/start_program.sh'
 
 export HOMEBREW_GITHUB_API_TOKEN="488e2fffe0daa5d37c87e7e1c893440da4a260da"
 
-#define JAVA_HOME
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home
+#define go environment
+export GOPATH=$HOME/go
+export GOBIN=$GOPATH/bin
+export PATH=$PATH:$GOBIN
 
-#apply zsh-syntax-highlighting
-source /Users/joke/Documents/program/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+#define JAVA_HOME
+export JAVA_6_HOME=/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home
+export JAVA_7_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_80.jdk/Contents/Home
+export JAVA_8_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home
+export JAVA_9_HOME=/Library/Java/JavaVirtualMachines/jdk-9.jdk/Contents/Home
+export JAVA_10_HOME=/Library/Java/JavaVirtualMachines/jdk-10.0.1.jdk/Contents/Home
+export JAVA_11_HOME=/Library/Java/JavaVirtualMachines/jdk-11.0.2.jdk/Contents/Home
+export JAVA_11_HOME=/Library/Java/JavaVirtualMachines/jdk-12.0.2.jdk/Contents/Home
+export JAVA_HOME=$JAVA_11_HOME
+
+#hadoop
+export HADOOP_HOME=/usr/local/Cellar/hadoop/2.8.1
+alias hstart=$HADOOP_HOME/sbin/start-all.sh
+alias hstop=$HADOOP_HOME/sbin/stop-all.sh
+
+#hbase
+export HBASE_HOME=/Users/al/programs/hbase/hbase-1.2.6
 
 export PROTOC_HOME=/Users/joke/Documents/program/protoc/protoc-3.0.2-osx-x86_64/bin
-export PATH=$PATH:$PROTOC_HOME
+export PATH=$PATH:$PROTOC_HOME:$HADOOP_HOME/bin
 
 autoload -U compinit && compinit
 zmodload -i zsh/complist
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
+
+# zplug
+export ZPLUG_HOME=/usr/local/opt/zplug
+source $ZPLUG_HOME/init.zsh
+
+# scmpuff
+eval "$(scmpuff init -s)"
+alias gpo="git push origin"
+alias gpr="git push release"
+alias gfr="git fetch release"
+alias gcod="gco develop"
+alias grbd="grb release/develop"
+alias gpod="gpo develop"
+
+alias gcode="gco dev"
+alias grbde="grb release/dev"
+alias gpode="gpo dev"
+
+# mysql
+export PATH=$PATH:/usr/local/mysql/bin/
+
+# virtualenvwrapper
+export PATH=$PATH:/usr/local/Cellar/python/3.7.4/bin
+export WORKON_HOME=/Users/al/virtualenv
+export VIRTUALENVWRAPPER_PYTHON=/Library/Frameworks/Python.framework/Versions/3.7/bin/python3
+
+#source /usr/local/bin/virtualenvwrapper.sh > /dev/null 2>&1
+#if [ $? -eq 0 ]; then
+#    echo "virtualenvwrapper setup succeeded"
+#else
+#    echo "virtualenvwrapper setup failed"
+#fi
+
+# kube
+if [ $commands[kubectl] ]; then
+  source <(kubectl completion zsh)
+fi
+
+# tomcat
+export CATALINA_HOME=/Users/al/programs/tomcat/current
+
+# nvm
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/al/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/al/Downloads/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/al/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/al/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+
+
+# alias
+alias k="kubectl"
+alias h="helm"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
